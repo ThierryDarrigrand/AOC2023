@@ -115,9 +115,7 @@ struct Day03: AdventDay {
   
   // Replace this with your solution for the first part of the day's challenge.
   func part1() -> Any {
-    "Not implemented yet"
-
-//    numbers.reduce(0, +)
+    numbers.reduce(0, +)
   }
   func part2() -> Any {
     gearRatios.reduce(0, +)
