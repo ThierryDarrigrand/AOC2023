@@ -1,11 +1,12 @@
 //
 //  Day02.swift
-//  
+//
 //
 //  Created by Thierry Darrigrand on 03/12/2023.
 //
 
 import XCTest
+
 @testable import AdventOfCode
 
 final class Day02Tests: XCTestCase {
@@ -16,7 +17,7 @@ final class Day02Tests: XCTestCase {
     Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red
     Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red
     Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green
-    
+
     """
 
   func testPart1() throws {
@@ -28,6 +29,5 @@ final class Day02Tests: XCTestCase {
     let challenge = Day02(data: testData)
     XCTAssertEqual(String(describing: challenge.part2()), "2286")
   }
-
 
 }

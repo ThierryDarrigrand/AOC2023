@@ -6,6 +6,7 @@
 //
 
 import XCTest
+
 @testable import AdventOfCode
 
 final class Day01Tests: XCTestCase {
@@ -31,7 +32,7 @@ final class Day01Tests: XCTestCase {
       4nineeightseven2
       zoneight234
       7pqrstsixteen
-      
+
       """
 
     let challenge = Day01(data: testData)

@@ -1,6 +1,6 @@
 //
 //  Day02.swift
-//  
+//
 //
 //  Created by Thierry on 03/12/2023.
 //
@@ -22,9 +22,9 @@ struct Day02: AdventDay {
   }
   static let cube = Parse {
     OneOf {
-      "red".map{Cube.red}
-      "green".map{Cube.green}
-      "blue".map{Cube.blue}
+      "red".map { Cube.red }
+      "green".map { Cube.green }
+      "blue".map { Cube.blue }
     }
   }
   static let set = Parse(input: Substring.self) {
@@ -46,7 +46,7 @@ struct Day02: AdventDay {
       "; "
     }
   }
-  
+
   static let games = Many {
     game
   } separator: {
@@ -58,45 +58,48 @@ struct Day02: AdventDay {
   var games: [Game] {
     try! Day02.games.parse(data)
   }
-  
-  func isPossible(_ set: [(Int, Cube)]) -> Bool {
+
+  func isPossible(set: [(Int, Cube)]) -> Bool {
     // [(Int, Cube)] -> [Cube: Int]
-    let dict = Dictionary(uniqueKeysWithValues: set.map{count, cube in (cube, count)})
-    return dict[.red, default: 0] <= 12 &&
-    dict[.green, default: 0] <= 13 &&
-    dict[.blue, default: 0] <= 14
+    let dict = Dictionary(uniqueKeysWithValues: set.map { count, cube in (cube, count) })
+    return dict[.red, default: 0] <= 12 && dict[.green, default: 0] <= 13
+      && dict[.blue, default: 0] <= 14
   }
-  
-  // Replace this with your solution for the first part of the day's challenge.
-  func part1() -> Any {
+
+  var possibleGames: [Int] {
     var possibleGames: [Int] = []
     for game in games {
       if game.sets.allSatisfy(isPossible) {
         possibleGames.append(game.id)
       }
     }
-    return possibleGames.reduce(0, +)
+    return possibleGames
   }
 
-  // Replace this with your solution for the second part of the day's challenge.
-  func part2() -> Any {
+  func part1() -> Any {
+    possibleGames.reduce(0, +)
+  }
+
+  var powers: [Int] {
     var powers: [Int] = []
     for game in games {
       var minimumSet: [Cube: Int] = [:]
       for set in game.sets {
-        let dict = Dictionary(uniqueKeysWithValues: set.map{count, cube in (cube, count)})
+        let dict = Dictionary(uniqueKeysWithValues: set.map { count, cube in (cube, count) })
         minimumSet[.red] = max(minimumSet[.red, default: 0], dict[.red, default: 0])
         minimumSet[.green] = max(minimumSet[.green, default: 0], dict[.green, default: 0])
         minimumSet[.blue] = max(minimumSet[.blue, default: 0], dict[.blue, default: 0])
       }
       let power =
-      minimumSet[.red, default: 0] *
-      minimumSet[.green, default: 0] *
-      minimumSet[.blue, default: 0]
+        minimumSet[.red, default: 0] * minimumSet[.green, default: 0]
+        * minimumSet[.blue, default: 0]
       powers.append(power)
     }
-    
-    return powers.reduce(0, +)
+
+    return powers
+  }
+
+  func part2() -> Any {
+    powers.reduce(0, +)
   }
 }
-
