@@ -6,16 +6,14 @@
 //
 
 import Numerics
-
-//public func lcm<I: FixedWidthInteger>(_ values: I ...) -> I {
-//    return lcm(of: values)
-//}
-
-public func lcm<C: Collection>(of values: C) -> C.Element where C.Element: FixedWidthInteger {
-    let v = values.first!
-    let r = values.dropFirst()
-    if r.isEmpty { return v }
-    
-    let lcmR = lcm(of: r)
-    return v / gcd(v, lcmR) * lcmR
+extension Collection {
+  public var headAndTail: (head: Element, tail: SubSequence)? {
+    guard let head = first else { return nil }
+    return (head, dropFirst())
+  }
+}
+public func lcm<T: BinaryInteger>(of values: some Collection<T>) -> T? {
+  guard let (head, tail) = values.headAndTail else { return nil }
+  guard let lcmR = lcm(of: tail) else { return head }
+  return head / gcd(head, lcmR) * lcmR
 }
