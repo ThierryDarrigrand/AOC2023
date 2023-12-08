@@ -100,7 +100,7 @@ struct Day08: AdventDay {
       }
       result.append(steps)
     }
-    return lcm(of: result)!
+    return lcm(of: result)
   }
   
   func part2() -> Any {

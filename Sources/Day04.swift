@@ -29,44 +29,47 @@ struct Day04: AdventDay {
     var matchingNumbers: Int {
       Set(numbers).intersection(Set(winningNumbers)).count
     }
-  }
-  static let card = Parse(ScratchCard.init) {
-    "Card"
-    Skip {
-      Many {
-        " "
-      }
-    }
-    Int.parser()
-    ": "
-    Many {
-      Skip {
-        Optionally {
-          " "
+    static func parser() -> AnyParser<Substring, ScratchCard> {
+       Parse(ScratchCard.init) {
+        "Card"
+        Skip {
+          Many {
+            " "
+          }
         }
-      }
-      Int.parser()
-    } separator: {
-      " "
-    } terminator: {
-      " | "
-    }
-    Many {
-      Skip {
-        Optionally {
+        Int.parser()
+        ": "
+        Many {
+          Skip {
+            Optionally {
+              " "
+            }
+          }
+          Int.parser()
+        } separator: {
           " "
+        } terminator: {
+          " | "
         }
-      }
-      Int.parser()
-    } separator: {
-      " "
-    } terminator: {
-      "\n"
+        Many {
+          Skip {
+            Optionally {
+              " "
+            }
+          }
+          Int.parser()
+        } separator: {
+          " "
+        } terminator: {
+          "\n"
+        }
+       }.eraseToAnyParser()
     }
   }
+
   static let cards = Parse {
     Many {
-      card
+      ScratchCard.parser()
     }
   }
   // Converts input data into its scratchcards from string.

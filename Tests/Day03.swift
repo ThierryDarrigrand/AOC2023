@@ -22,9 +22,11 @@ final class Day03Tests: XCTestCase {
     ......755.
     ...$.*....
     .664.598..
-
     """
-
+  func testRow() {
+    var data = testData[...]
+    XCTAssertEqual(try! Day03.row.parse(&data), [.digit(4), .digit(6), .digit(7), .dot, .dot, .digit(1), .digit(1), .digit(4), .dot, .dot])
+  }
   func testEngine() throws {
     let challenge = Day03(data: testData)
 

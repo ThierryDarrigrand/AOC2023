@@ -12,33 +12,36 @@ struct Day05: AdventDay {
   // Save your data in a corresponding text file in the `Data` directory.
   var data: String
 
-  struct Line: Equatable {
+  struct Line: Equatable, Comparable {
     let destinationRangeStart: Int
     let sourceRangeStart: Int
     let rangeLength: Int
-  }
-  static let line = Parse(input: Substring.self, Line.init) {
-    Int.parser()
-    " "
-    Int.parser()
-    " "
-    Int.parser()
+    
+    static func < (lhs: Self, rhs: Self) -> Bool {
+      lhs.sourceRangeStart < rhs.sourceRangeStart
+    }
+    var sourceRange: Range<Int> {
+      sourceRangeStart..<sourceRangeStart + rangeLength
+    }
+    var delta: Int {
+      destinationRangeStart-sourceRangeStart
+    }
+    func destinationRange(sourceRange: Range<Int>) -> Range<Int> {
+      sourceRange.lowerBound+delta..<sourceRange.upperBound+delta
+    }
+    
+    static func parser() -> AnyParser<Substring, Line> {
+      Parse(input: Substring.self, Line.init) {
+        Int.parser()
+        " "
+        Int.parser()
+        " "
+        Int.parser()
+      }.eraseToAnyParser()
+    }
   }
   
   typealias Map = [Line]
-
-  static func sourceToDestination(title: String) -> AnyParser<Substring, Map> {
-    Parse {
-      "\(title) map:\n"
-      Many {
-        line
-      } separator: {
-        "\n"
-      } terminator: {
-        "\n"
-      }
-    }.eraseToAnyParser()
-  }
 
   struct Almanach {
     let seeds: [Int]
@@ -49,37 +52,52 @@ struct Day05: AdventDay {
     let lightToTemperature: Map
     let temperatureToHumidity: Map
     let humidityToLocation: Map
-  }
-
-  static let seeds = Parse {
-    "seeds: "
-    Many {
-      Int.parser()
-    } separator: {
-      " "
-    } terminator: {
-      "\n"
+    
+    static func parser() -> AnyParser<Substring, Almanach> {
+      let seeds = Parse {
+        "seeds: "
+        Many {
+          Int.parser()
+        } separator: {
+          " "
+        } terminator: {
+          "\n"
+        }
+      }
+      func sourceToDestination(title: String) -> AnyParser<Substring, Map> {
+        Parse {
+          "\(title) map:\n"
+          Many {
+            Line.parser()
+          } separator: {
+            "\n"
+          } terminator: {
+            "\n"
+          }
+        }.eraseToAnyParser()
+      }
+      return Parse(Almanach.init) {
+        seeds
+        "\n"
+        sourceToDestination(title: "seed-to-soil")
+        "\n"
+        sourceToDestination(title: "soil-to-fertilizer")
+        "\n"
+        sourceToDestination(title: "fertilizer-to-water")
+        "\n"
+        sourceToDestination(title: "water-to-light")
+        "\n"
+        sourceToDestination(title: "light-to-temperature")
+        "\n"
+        sourceToDestination(title: "temperature-to-humidity")
+        "\n"
+        sourceToDestination(title: "humidity-to-location")
+      }.eraseToAnyParser()
     }
   }
-  static let almanach = Parse(Almanach.init) {
-    seeds
-    "\n"
-    sourceToDestination(title: "seed-to-soil")
-    "\n"
-    sourceToDestination(title: "soil-to-fertilizer")
-    "\n"
-    sourceToDestination(title: "fertilizer-to-water")
-    "\n"
-    sourceToDestination(title: "water-to-light")
-    "\n"
-    sourceToDestination(title: "light-to-temperature")
-    "\n"
-    sourceToDestination(title: "temperature-to-humidity")
-    "\n"
-    sourceToDestination(title: "humidity-to-location")
-  }
+
   var almanach: Almanach {
-    try! Day05.almanach.parse(data)
+    try! Day05.Almanach.parser().parse(data)
   }
   func sourceToDestination(map: Map, _ source: Int) -> Int {
     for line in map {
@@ -107,45 +125,68 @@ struct Day05: AdventDay {
   func part1() -> Any {
     locations(seeds: almanach.seeds).min()!
   }
-
-  var seedsInRange: [Int] {
-    var result: [Int] = []
+  
+  var seedRanges: [Range<Int>] {
+    var result: [Range<Int>] = []
     for chunk in almanach.seeds.chunks(ofCount: 2) {
       let start = chunk.first!
       let length = chunk.dropFirst().first!
-      for n in 0..<length {
-        result.append(start + n)
-      }
+      result.append(start..<start+length)
     }
     return result
   }
-  func locations2(seeds: [Int]) -> Set<Int> {
-    let soils = Set(seeds.map { seed in
-      sourceToDestination(map: almanach.seedToSoil, seed)
-    })
-    let fertilizers = Set(soils.map { soil in
-      sourceToDestination(map: almanach.soilToFertilizer, soil)
-    })
-    let waters = Set(fertilizers.map { fertilizer in
-      sourceToDestination(map: almanach.fertilizerToWater, fertilizer)
-    })
-    let lights = Set(waters.map { water in
-      sourceToDestination(map: almanach.waterToLight, water)
-    })
-    let temperatures = Set(lights.map { light in
-      sourceToDestination(map: almanach.lightToTemperature, light)
-    })
-    let humidities = Set(temperatures.map { temperature in
-      sourceToDestination(map: almanach.temperatureToHumidity, temperature)
-    })
-    let locations = Set(humidities.map { humidity in
-      sourceToDestination(map: almanach.humidityToLocation, humidity)
-    })
-    return locations
+  func sourceToDestination(map: Map, sourceRange: Range<Int>) -> [Range<Int>] {
+    let sortedMap = map.sorted()
+    var destinationRanges: [Range<Int>] = []
+    var start = sourceRange.lowerBound
+    while sourceRange.contains(start) {
+      let destinationRange: Range<Int>
+      if let line = sortedMap.first(where: {$0.sourceRange.contains(start)}) {
+        let range = start..<min(line.sourceRange.upperBound, sourceRange.upperBound)
+        destinationRange = line.destinationRange(sourceRange: range)
+        start = range.upperBound
+      } else if let line = sortedMap.first(where: {start < $0.sourceRangeStart}){
+        destinationRange = start..<line.sourceRangeStart
+        start = destinationRange.upperBound
+      } else {
+        destinationRange = start..<sourceRange.upperBound
+        start = destinationRange.upperBound
+      }
+      destinationRanges.append(destinationRange)
+    }
+    return destinationRanges
+  }
+
+  func locationRanges(seedRanges: [Range<Int>]) -> [Range<Int>] {
+    let soilRanges = seedRanges.reduce([]) { acc, seedRange in
+      acc + sourceToDestination(map: almanach.seedToSoil, sourceRange: seedRange)
+    }
+    let fertilizerRanges = soilRanges.reduce([])  {acc, soilRange in
+      acc + sourceToDestination(map: almanach.soilToFertilizer, sourceRange: soilRange)
+    }
+    let waterRanges = fertilizerRanges.reduce([]) { acc, fertilizerRange in
+      acc + sourceToDestination(map: almanach.fertilizerToWater, sourceRange: fertilizerRange)
+    }
+    let lightRanges = waterRanges.reduce([]) { acc, waterRange in
+      acc + sourceToDestination(map: almanach.waterToLight, sourceRange: waterRange)
+    }
+    let temperatureRanges = lightRanges.reduce([]) {acc, lightRange in
+      acc + sourceToDestination(map: almanach.lightToTemperature, sourceRange: lightRange)
+    }
+    let humidityRanges = temperatureRanges.reduce([]) { acc, temperatureRange in
+      acc + sourceToDestination(map: almanach.temperatureToHumidity, sourceRange: temperatureRange)
+    }
+    let locationRanges = humidityRanges.reduce([]) { acc, humidityRange in
+      acc + sourceToDestination(map: almanach.humidityToLocation, sourceRange: humidityRange)
+    }
+    return locationRanges
   }
   func part2() -> Any {
-//    locations(seeds: seedsInRange).min()!
-    locations2(seeds: seedsInRange).min()!
+    locationRanges(seedRanges: seedRanges)
+      .min{ lhs, rhs in
+        lhs.lowerBound < rhs.lowerBound
+      }!
+      .lowerBound
   }
 
 }

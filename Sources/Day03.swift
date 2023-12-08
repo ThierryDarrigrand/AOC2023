@@ -4,6 +4,7 @@
 //
 //  Created by Thierry Darrigrand on 03/12/2023.
 //
+import Parsing
 
 struct Day03: AdventDay {
 
@@ -14,18 +15,32 @@ struct Day03: AdventDay {
     case digit(Int)
     case symbol(String)
     case dot
+    
+    static func parser() -> AnyParser<Substring, Cell> {
+      Parse {
+        OneOf {
+          Digits(1).map{ Cell.digit($0)}
+          ".".map{ Cell.dot}
+          Prefix(1, while:{$0 != "\n"}).map{Cell.symbol(String($0))}
+        }
+      }.eraseToAnyParser()
+    }
+  }
+  static let row = Parse {
+    Many {
+      Cell.parser()
+    } 
+  }
+  static let grid = Parse {
+    Many {
+      row
+    } separator: {
+      "\n"
+    } 
   }
 
   var engine: [[Cell]] {
-    data.split(separator: "\n").map {
-      $0.map {
-        switch $0 {
-        case _ where $0.isNumber: Cell.digit(Int(String($0))!)
-        case ".": Cell.dot
-        default: Cell.symbol(String($0))
-        }
-      }
-    }
+    try! Day03.grid.parse(data)
   }
   var rows: Int {
     engine.count

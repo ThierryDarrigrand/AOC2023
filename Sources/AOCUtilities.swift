@@ -6,14 +6,15 @@
 //
 
 import Numerics
-extension Collection {
-  public var headAndTail: (head: Element, tail: SubSequence)? {
-    guard let head = first else { return nil }
-    return (head, dropFirst())
+//extension Collection {
+//  public var headAndTail: (head: Element, tail: SubSequence)? {
+//    guard let head = first else { return nil }
+//    return (head, dropFirst())
+//  }
+//}
+///If the sequence of values is empty, the result is 1
+public func lcm<T: BinaryInteger>(of values: some Sequence<T>) -> T {
+  values.reduce(1) { acc, n in
+    n / gcd(n, acc) * acc
   }
-}
-public func lcm<T: BinaryInteger>(of values: some Collection<T>) -> T? {
-  guard let (head, tail) = values.headAndTail else { return nil }
-  guard let lcmR = lcm(of: tail) else { return head }
-  return head / gcd(head, lcmR) * lcmR
 }

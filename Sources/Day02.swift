@@ -15,40 +15,46 @@ struct Day02: AdventDay {
     case red
     case green
     case blue
+    
+    static func parser() -> AnyParser<Substring, Cube> {
+      Parse {
+        OneOf {
+          "red".map { Cube.red }
+          "green".map { Cube.green }
+          "blue".map { Cube.blue }
+        }
+      }.eraseToAnyParser()
+    }
   }
   struct Game {
     let id: Int
     let sets: [[(Int, Cube)]]
-  }
-  static let cube = Parse {
-    OneOf {
-      "red".map { Cube.red }
-      "green".map { Cube.green }
-      "blue".map { Cube.blue }
-    }
-  }
-  static let set = Parse(input: Substring.self) {
-    Many {
-      Int.parser()
-      " "
-      cube
-    } separator: {
-      ", "
-    }
-  }
-  static let game = Parse(Game.init) {
-    "Game "
-    Int.parser()
-    ": "
-    Many {
-      set
-    } separator: {
-      "; "
+    
+    static func parser() -> AnyParser<Substring, Game> {
+      let set = Parse(input: Substring.self) {
+        Many {
+          Int.parser()
+          " "
+          Cube.parser()
+        } separator: {
+          ", "
+        }
+      }
+      return Parse(Game.init) {
+        "Game "
+        Int.parser()
+        ": "
+        Many {
+          set
+        } separator: {
+          "; "
+        }
+      }.eraseToAnyParser()
     }
   }
 
   static let games = Many {
-    game
+    Game.parser()
   } separator: {
     "\n"
   } terminator: {
