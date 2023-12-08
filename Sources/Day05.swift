@@ -89,9 +89,9 @@ struct Day05: AdventDay {
     }
     return source
   }
-  var locations: [Int] {
+  func locations(seeds: [Int]) -> [Int] {
     var result: [Int] = []
-    for seed in almanach.seeds {
+    for seed in seeds {
       let soil = sourceToDestination(map: almanach.seedToSoil, seed)
       let fertilizer = sourceToDestination(map: almanach.soilToFertilizer, soil)
       let water = sourceToDestination(map: almanach.fertilizerToWater, fertilizer)
@@ -103,8 +103,9 @@ struct Day05: AdventDay {
     }
     return result
   }
+
   func part1() -> Any {
-    locations.min()!
+    locations(seeds: almanach.seeds).min()!
   }
 
   var seedsInRange: [Int] {
@@ -118,23 +119,33 @@ struct Day05: AdventDay {
     }
     return result
   }
-
-  var locations2: [Int] {
-    var result: [Int] = []
-    for seed in seedsInRange {
-      let soil = sourceToDestination(map: almanach.seedToSoil, seed)
-      let fertilizer = sourceToDestination(map: almanach.soilToFertilizer, soil)
-      let water = sourceToDestination(map: almanach.fertilizerToWater, fertilizer)
-      let light = sourceToDestination(map: almanach.waterToLight, water)
-      let temperature = sourceToDestination(map: almanach.lightToTemperature, light)
-      let humidity = sourceToDestination(map: almanach.temperatureToHumidity, temperature)
-      let location = sourceToDestination(map: almanach.humidityToLocation, humidity)
-      result.append(location)
-    }
-    return result
+  func locations2(seeds: [Int]) -> Set<Int> {
+    let soils = Set(seeds.map { seed in
+      sourceToDestination(map: almanach.seedToSoil, seed)
+    })
+    let fertilizers = Set(soils.map { soil in
+      sourceToDestination(map: almanach.soilToFertilizer, soil)
+    })
+    let waters = Set(fertilizers.map { fertilizer in
+      sourceToDestination(map: almanach.fertilizerToWater, fertilizer)
+    })
+    let lights = Set(waters.map { water in
+      sourceToDestination(map: almanach.waterToLight, water)
+    })
+    let temperatures = Set(lights.map { light in
+      sourceToDestination(map: almanach.lightToTemperature, light)
+    })
+    let humidities = Set(temperatures.map { temperature in
+      sourceToDestination(map: almanach.temperatureToHumidity, temperature)
+    })
+    let locations = Set(humidities.map { humidity in
+      sourceToDestination(map: almanach.humidityToLocation, humidity)
+    })
+    return locations
   }
   func part2() -> Any {
-    locations2.min()!
+//    locations(seeds: seedsInRange).min()!
+    locations2(seeds: seedsInRange).min()!
   }
 
 }
