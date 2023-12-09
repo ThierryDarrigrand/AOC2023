@@ -1,4 +1,5 @@
 import Parsing
+
 enum Day071 {
   enum Label: Int, Equatable, Comparable {
     case L2=2, L3, L4, L5, L6, L7, L8, L9, T, J, Q, K, A
@@ -184,6 +185,7 @@ enum Day071 {
     }
   }
 }
+// TODO: refactor with protocol
 protocol BidProtocol {
   associatedtype Label: Hashable
   

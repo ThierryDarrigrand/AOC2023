@@ -183,10 +183,8 @@ struct Day05: AdventDay {
   }
   func part2() -> Any {
     locationRanges(seedRanges: seedRanges)
-      .min{ lhs, rhs in
-        lhs.lowerBound < rhs.lowerBound
-      }!
-      .lowerBound
+      .map(\.lowerBound)
+      .min()!
   }
 
 }
