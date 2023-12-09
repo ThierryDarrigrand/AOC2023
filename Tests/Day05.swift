@@ -108,13 +108,27 @@ final class Day05Tests: XCTestCase {
   }
   func testSourceToDestinationRange() {
     let challenge = Day05(data: testData)
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.seedToSoil, sourceRange: 79..<93), [81..<95])
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.soilToFertilizer, sourceRange: 81..<95), [81..<95])
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.fertilizerToWater, sourceRange: 81..<95), [81..<95])
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.waterToLight, sourceRange: 81..<95), [74..<88])
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.lightToTemperature, sourceRange: 74..<88), [78..<81, 45..<56])
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.temperatureToHumidity, sourceRange: 45..<56), [46..<57])
-    XCTAssertEqual(challenge.sourceToDestination(map: challenge.almanach.humidityToLocation, sourceRange: 46..<57), [46..<56, 60..<61])
+    XCTAssertEqual(
+      challenge.sourceToDestination(map: challenge.almanach.seedToSoil, sourceRange: 79..<93),
+      [81..<95])
+    XCTAssertEqual(
+      challenge.sourceToDestination(map: challenge.almanach.soilToFertilizer, sourceRange: 81..<95),
+      [81..<95])
+    XCTAssertEqual(
+      challenge.sourceToDestination(
+        map: challenge.almanach.fertilizerToWater, sourceRange: 81..<95), [81..<95])
+    XCTAssertEqual(
+      challenge.sourceToDestination(map: challenge.almanach.waterToLight, sourceRange: 81..<95),
+      [74..<88])
+    XCTAssertEqual(
+      challenge.sourceToDestination(
+        map: challenge.almanach.lightToTemperature, sourceRange: 74..<88), [78..<81, 45..<56])
+    XCTAssertEqual(
+      challenge.sourceToDestination(
+        map: challenge.almanach.temperatureToHumidity, sourceRange: 45..<56), [46..<57])
+    XCTAssertEqual(
+      challenge.sourceToDestination(
+        map: challenge.almanach.humidityToLocation, sourceRange: 46..<57), [46..<56, 60..<61])
   }
   func testPart2() throws {
     let challenge = Day05(data: testData)

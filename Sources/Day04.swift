@@ -30,7 +30,7 @@ struct Day04: AdventDay {
       Set(numbers).intersection(Set(winningNumbers)).count
     }
     static func parser() -> AnyParser<Substring, ScratchCard> {
-       Parse(ScratchCard.init) {
+      Parse(ScratchCard.init) {
         "Card"
         Skip {
           Many {
@@ -63,7 +63,7 @@ struct Day04: AdventDay {
         } terminator: {
           "\n"
         }
-       }.eraseToAnyParser()
+      }.eraseToAnyParser()
     }
   }
 

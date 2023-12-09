@@ -2,33 +2,57 @@ import Parsing
 
 enum Day071 {
   enum Label: Int, Equatable, Comparable {
-    case L2=2, L3, L4, L5, L6, L7, L8, L9, T, J, Q, K, A
+    case l2 = 2
+    case l3
+    case l4
+    case l5
+    case l6
+    case l7
+    case l8
+    case l9
+    case t
+    case j
+    case q
+    case k
+    case a
     static func < (lhs: Self, rhs: Self) -> Bool {
       lhs.rawValue < rhs.rawValue
-      }
     }
+  }
   enum LabelJ: Int, Equatable, Comparable {
-    case J=1, L2, L3, L4, L5, L6, L7, L8, L9, T, Q, K, A
+    case j = 1
+    case l2
+    case l3
+    case l4
+    case l5
+    case l6
+    case l7
+    case l8
+    case l9
+    case t
+    case q
+    case k
+    case a
     static func < (lhs: Self, rhs: Self) -> Bool {
       lhs.rawValue < rhs.rawValue
-      }
     }
+  }
 
   static let label = Parse {
     OneOf {
-      "2".map{Label.L2}
-      "3".map{Label.L3}
-      "4".map{Label.L4}
-      "5".map{Label.L5}
-      "6".map{Label.L6}
-      "7".map{Label.L7}
-      "8".map{Label.L8}
-      "9".map{Label.L9}
-      "T".map{Label.T}
-      "J".map{Label.J}
-      "Q".map{Label.Q}
-      "K".map{Label.K}
-      "A".map{Label.A}
+      "2".map { Label.l2 }
+      "3".map { Label.l3 }
+      "4".map { Label.l4 }
+      "5".map { Label.l5 }
+      "6".map { Label.l6 }
+      "7".map { Label.l7 }
+      "8".map { Label.l8 }
+      "9".map { Label.l9 }
+      "T".map { Label.t }
+      "J".map { Label.j }
+      "Q".map { Label.q }
+      "K".map { Label.k }
+      "A".map { Label.a }
     }
   }
   static let hand = Parse {
@@ -103,24 +127,24 @@ enum Day071 {
     var hand: [LabelJ] {
       bid.hand.map {
         switch $0 {
-        case .L2: .L2
-        case .L3: .L3
-        case .L4: .L4
-        case .L5: .L5
-        case .L6: .L6
-        case .L7: .L7
-        case .L8: .L8
-        case .L9: .L9
-        case .T: .T
-        case .J: .J
-        case .Q: .Q
-        case .K: .K
-        case .A: .A
+        case .l2: .l2
+        case .l3: .l3
+        case .l4: .l4
+        case .l5: .l5
+        case .l6: .l6
+        case .l7: .l7
+        case .l8: .l8
+        case .l9: .l9
+        case .t: .t
+        case .j: .j
+        case .q: .q
+        case .k: .k
+        case .a: .a
         }
       }
     }
     var type: `Type` {
-      switch bid.count[.J] {
+      switch bid.count[.j] {
       case 5: .fiveOfAKind
       case 4: .fiveOfAKind
       case nil: bid.type
@@ -188,11 +212,10 @@ enum Day071 {
 // TODO: refactor with protocol
 protocol BidProtocol {
   associatedtype Label: Hashable
-  
+
   var hand: [Label] { get }
   var bid: Int { get }
-  
-  
+
 }
 enum `Type`: Int, Equatable, Comparable {
   case none = 0
@@ -241,14 +264,14 @@ struct Day07: AdventDay {
     try! Day071.bids.parse(data)
   }
   var bids2: [Day071.BidJ] {
-    bids.map{Day071.BidJ(bid: $0)}
+    bids.map { Day071.BidJ(bid: $0) }
   }
 
   func part1() -> Any {
-    zip(1..., bids.sorted()).map{$0*$1.bid}.reduce(0, +)
+    zip(1..., bids.sorted()).map { $0 * $1.bid }.reduce(0, +)
   }
   func part2() -> Any {
-    zip(1..., bids2.sorted()).map{$0*$1.bid.bid}.reduce(0, +)
+    zip(1..., bids2.sorted()).map { $0 * $1.bid.bid }.reduce(0, +)
   }
 
 }

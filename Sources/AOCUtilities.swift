@@ -1,11 +1,12 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Thierry Darrigrand on 08/12/2023.
 //
 
 import Numerics
+
 //extension Collection {
 //  public var headAndTail: (head: Element, tail: SubSequence)? {
 //    guard let head = first else { return nil }

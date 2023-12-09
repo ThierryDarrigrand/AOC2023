@@ -15,7 +15,7 @@ struct Day02: AdventDay {
     case red
     case green
     case blue
-    
+
     static func parser() -> AnyParser<Substring, Cube> {
       Parse {
         OneOf {
@@ -29,7 +29,7 @@ struct Day02: AdventDay {
   struct Game {
     let id: Int
     let sets: [[(Int, Cube)]]
-    
+
     static func parser() -> AnyParser<Substring, Game> {
       let set = Parse(input: Substring.self) {
         Many {

@@ -15,13 +15,13 @@ struct Day03: AdventDay {
     case digit(Int)
     case symbol(String)
     case dot
-    
+
     static func parser() -> AnyParser<Substring, Cell> {
       Parse {
         OneOf {
-          Digits(1).map{ Cell.digit($0)}
-          ".".map{ Cell.dot}
-          Prefix(1, while:{$0 != "\n"}).map{Cell.symbol(String($0))}
+          Digits(1).map { Cell.digit($0) }
+          ".".map { Cell.dot }
+          Prefix(1, while: { $0 != "\n" }).map { Cell.symbol(String($0)) }
         }
       }.eraseToAnyParser()
     }
@@ -29,14 +29,14 @@ struct Day03: AdventDay {
   static let row = Parse {
     Many {
       Cell.parser()
-    } 
+    }
   }
   static let grid = Parse {
     Many {
       row
     } separator: {
       "\n"
-    } 
+    }
   }
 
   var engine: [[Cell]] {
@@ -89,7 +89,7 @@ struct Day03: AdventDay {
   func part1() -> Any {
     numbers.reduce(0, +)
   }
-  
+
   func numbersAdjacent(row: Int, col: Int) -> [Int] {
     var result: [Int] = []
     for r in row - 1...row + 1 where r >= 0 && r < rows {

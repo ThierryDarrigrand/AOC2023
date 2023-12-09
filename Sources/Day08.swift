@@ -1,7 +1,6 @@
 import Algorithms
-import Parsing
 import IdentifiedCollections
-
+import Parsing
 
 struct Day08: AdventDay {
   // Save your data in a corresponding text file in the `Data` directory.
@@ -9,12 +8,12 @@ struct Day08: AdventDay {
 
   enum Instruction: Equatable {
     case left, right
-    
+
     static func parser() -> AnyParser<Substring, Instruction> {
       Parse {
         OneOf {
-          "L".map{ Instruction.left}
-          "R".map{ Instruction.right}
+          "L".map { Instruction.left }
+          "R".map { Instruction.right }
         }
       }.eraseToAnyParser()
     }
@@ -42,12 +41,12 @@ struct Day08: AdventDay {
   struct Map: Equatable {
     let instructions: [Instruction]
     let nodes: [Node]
-    
+
     static func parser() -> AnyParser<Substring, Map> {
       Parse(Map.init) {
         Many {
           Instruction.parser()
-        }        
+        }
         "\n\n"
         Many {
           Node.parser()
@@ -63,16 +62,16 @@ struct Day08: AdventDay {
   var map: Map {
     try! Day08.Map.parser().parse(data)
   }
-  func steps(nodes: IdentifiedArrayOf<Node>, nodeID: String, end: (String) -> Bool ) -> Int {
+  func steps(nodes: IdentifiedArrayOf<Node>, nodeID: String, end: (String) -> Bool) -> Int {
     var result = 0
     var nodeID = nodeID
     for instruction in map.instructions.cycled() {
-        let node = nodes[id: nodeID]!
-        switch instruction {
-        case .left : nodeID = node.leftID
-        case .right: nodeID = node.rightID
-        }
-        result += 1
+      let node = nodes[id: nodeID]!
+      switch instruction {
+      case .left: nodeID = node.leftID
+      case .right: nodeID = node.rightID
+      }
+      result += 1
       if end(nodeID) { break }
     }
     return result
@@ -83,7 +82,7 @@ struct Day08: AdventDay {
       $0 == "ZZZ"
     }
   }
-  
+
   func part1() -> Any {
     steps
   }
@@ -93,7 +92,7 @@ struct Day08: AdventDay {
     let nodeIDs = nodes.ids.filter {
       $0.last == "A"
     }
-    var result:[Int] = []
+    var result: [Int] = []
     for nodeID in nodeIDs {
       let steps = steps(nodes: nodes, nodeID: nodeID) {
         $0.last == "Z"
@@ -102,10 +101,9 @@ struct Day08: AdventDay {
     }
     return lcm(of: result)
   }
-  
+
   func part2() -> Any {
     stepsSim
   }
 
 }
-

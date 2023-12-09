@@ -1,6 +1,6 @@
 //
 //  Day06.swift
-//  
+//
 //
 //  Created by Thierry Darrigrand on 06/12/2023.
 //
@@ -15,7 +15,7 @@ struct Day06: AdventDay {
     let time: Int
     let distance: Int
   }
-  static func line(title: String)-> AnyParser<Substring, [Int]> {
+  static func line(title: String) -> AnyParser<Substring, [Int]> {
     Parse([Int].init) {
       "\(title):"
       Skip {
@@ -48,9 +48,9 @@ struct Day06: AdventDay {
   func numberOfWaysToWin(race: Race) -> Int {
     (0...race.time)
       .map { time in
-        time * (race.time-time)
+        time * (race.time - time)
       }
-      .filter{ $0 > race.distance }
+      .filter { $0 > race.distance }
       .count
   }
 

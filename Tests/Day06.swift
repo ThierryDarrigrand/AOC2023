@@ -1,6 +1,6 @@
 //
 //  Day06.swift
-//  
+//
 //
 //  Created by Thierry Darrigrand on 06/12/2023.
 //
@@ -25,6 +25,5 @@ final class Day06Tests: XCTestCase {
     let challenge = Day06(data: testData)
     XCTAssertEqual(String(describing: challenge.part2()), "71503")
   }
-
 
 }

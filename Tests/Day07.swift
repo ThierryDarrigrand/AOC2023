@@ -10,37 +10,43 @@ final class Day07Tests: XCTestCase {
     KK677 28
     KTJJT 220
     QQQJA 483
-    
+
     """
   func testBids() {
     let challenge = Day07(data: testData)
-    XCTAssertEqual(challenge.bids, [
-      Day071.Bid(hand: [.L3, .L2, .T, .L3, .K], bid: 765),
-      Day071.Bid(hand: [.T, .L5, .L5, .J, .L5], bid: 684),
-      Day071.Bid(hand: [.K, .K, .L6, .L7, .L7], bid: 28),
-      Day071.Bid(hand: [.K, .T, .J, .J, .T], bid: 220),
-      Day071.Bid(hand: [.Q, .Q, .Q, .J, .A], bid: 483),
-    ])
+    XCTAssertEqual(
+      challenge.bids,
+      [
+        Day071.Bid(hand: [.l3, .l2, .t, .l3, .k], bid: 765),
+        Day071.Bid(hand: [.t, .l5, .l5, .j, .l5], bid: 684),
+        Day071.Bid(hand: [.k, .k, .l6, .l7, .l7], bid: 28),
+        Day071.Bid(hand: [.k, .t, .j, .j, .t], bid: 220),
+        Day071.Bid(hand: [.q, .q, .q, .j, .a], bid: 483),
+      ])
   }
   func testBidsSorted() {
     let challenge = Day07(data: testData)
-    XCTAssertEqual(challenge.bids.sorted(), [
-      Day071.Bid(hand: [.L3, .L2, .T, .L3, .K], bid: 765),
-      Day071.Bid(hand: [.K, .T, .J, .J, .T], bid: 220),
-      Day071.Bid(hand: [.K, .K, .L6, .L7, .L7], bid: 28),
-      Day071.Bid(hand: [.T, .L5, .L5, .J, .L5], bid: 684),
-      Day071.Bid(hand: [.Q, .Q, .Q, .J, .A], bid: 483),
-    ])
+    XCTAssertEqual(
+      challenge.bids.sorted(),
+      [
+        Day071.Bid(hand: [.l3, .l2, .t, .l3, .k], bid: 765),
+        Day071.Bid(hand: [.k, .t, .j, .j, .t], bid: 220),
+        Day071.Bid(hand: [.k, .k, .l6, .l7, .l7], bid: 28),
+        Day071.Bid(hand: [.t, .l5, .l5, .j, .l5], bid: 684),
+        Day071.Bid(hand: [.q, .q, .q, .j, .a], bid: 483),
+      ])
   }
   func testCount() {
     let challenge = Day07(data: testData)
-    XCTAssertEqual(challenge.bids.map(\.count), [
-      [.L3: 2, .T: 1, .L2: 1, .K: 1],
-      [.T: 1,  .L5: 3,.J: 1],
-      [.L7: 2, .L6: 1,.K: 2],
-      [.J: 2,  .K: 1, .T: 2],
-      [.J: 1,  .A: 1, .Q: 3],
-    ])
+    XCTAssertEqual(
+      challenge.bids.map(\.count),
+      [
+        [.l3: 2, .t: 1, .l2: 1, .k: 1],
+        [.t: 1, .l5: 3, .j: 1],
+        [.l7: 2, .l6: 1, .k: 2],
+        [.j: 2, .k: 1, .t: 2],
+        [.j: 1, .a: 1, .q: 3],
+      ])
   }
   func testPart1() throws {
     let challenge = Day07(data: testData)
@@ -48,24 +54,28 @@ final class Day07Tests: XCTestCase {
   }
   func testBids2() {
     let challenge = Day07(data: testData)
-    XCTAssertEqual(challenge.bids2, [
-      Day071.BidJ(bid: Day071.Bid(hand: [.L3, .L2, .T, .L3, .K], bid: 765)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.T, .L5, .L5, .J, .L5], bid: 684)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.K, .K, .L6, .L7, .L7], bid: 28)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.K, .T, .J, .J, .T], bid: 220)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.Q, .Q, .Q, .J, .A], bid: 483)),
-    ])
+    XCTAssertEqual(
+      challenge.bids2,
+      [
+        Day071.BidJ(bid: Day071.Bid(hand: [.l3, .l2, .t, .l3, .k], bid: 765)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.t, .l5, .l5, .j, .l5], bid: 684)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.k, .k, .l6, .l7, .l7], bid: 28)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.k, .t, .j, .j, .t], bid: 220)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.q, .q, .q, .j, .a], bid: 483)),
+      ])
   }
 
   func testBids2Sorted() {
     let challenge = Day07(data: testData)
-    XCTAssertEqual(challenge.bids2.sorted(), [
-      Day071.BidJ(bid: Day071.Bid(hand: [.L3, .L2, .T, .L3, .K], bid: 765)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.K, .K, .L6, .L7, .L7], bid: 28)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.T, .L5, .L5, .J, .L5], bid: 684)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.Q, .Q, .Q, .J, .A], bid: 483)),
-      Day071.BidJ(bid: Day071.Bid(hand: [.K, .T, .J, .J, .T], bid: 220)),
-    ])
+    XCTAssertEqual(
+      challenge.bids2.sorted(),
+      [
+        Day071.BidJ(bid: Day071.Bid(hand: [.l3, .l2, .t, .l3, .k], bid: 765)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.k, .k, .l6, .l7, .l7], bid: 28)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.t, .l5, .l5, .j, .l5], bid: 684)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.q, .q, .q, .j, .a], bid: 483)),
+        Day071.BidJ(bid: Day071.Bid(hand: [.k, .t, .j, .j, .t], bid: 220)),
+      ])
   }
   func testPart2() throws {
     let challenge = Day07(data: testData)

@@ -16,7 +16,7 @@ struct Day05: AdventDay {
     let destinationRangeStart: Int
     let sourceRangeStart: Int
     let rangeLength: Int
-    
+
     static func < (lhs: Self, rhs: Self) -> Bool {
       lhs.sourceRangeStart < rhs.sourceRangeStart
     }
@@ -24,12 +24,12 @@ struct Day05: AdventDay {
       sourceRangeStart..<sourceRangeStart + rangeLength
     }
     var delta: Int {
-      destinationRangeStart-sourceRangeStart
+      destinationRangeStart - sourceRangeStart
     }
     func destinationRange(sourceRange: Range<Int>) -> Range<Int> {
-      sourceRange.lowerBound+delta..<sourceRange.upperBound+delta
+      sourceRange.lowerBound + delta..<sourceRange.upperBound + delta
     }
-    
+
     static func parser() -> AnyParser<Substring, Line> {
       Parse(input: Substring.self, Line.init) {
         Int.parser()
@@ -40,7 +40,7 @@ struct Day05: AdventDay {
       }.eraseToAnyParser()
     }
   }
-  
+
   typealias Map = [Line]
 
   struct Almanach {
@@ -52,7 +52,7 @@ struct Day05: AdventDay {
     let lightToTemperature: Map
     let temperatureToHumidity: Map
     let humidityToLocation: Map
-    
+
     static func parser() -> AnyParser<Substring, Almanach> {
       let seeds = Parse {
         "seeds: "
@@ -125,13 +125,13 @@ struct Day05: AdventDay {
   func part1() -> Any {
     locations(seeds: almanach.seeds).min()!
   }
-  
+
   var seedRanges: [Range<Int>] {
     var result: [Range<Int>] = []
     for chunk in almanach.seeds.chunks(ofCount: 2) {
       let start = chunk.first!
       let length = chunk.dropFirst().first!
-      result.append(start..<start+length)
+      result.append(start..<start + length)
     }
     return result
   }
@@ -141,11 +141,11 @@ struct Day05: AdventDay {
     var start = sourceRange.lowerBound
     while sourceRange.contains(start) {
       let destinationRange: Range<Int>
-      if let line = sortedMap.first(where: {$0.sourceRange.contains(start)}) {
+      if let line = sortedMap.first(where: { $0.sourceRange.contains(start) }) {
         let range = start..<min(line.sourceRange.upperBound, sourceRange.upperBound)
         destinationRange = line.destinationRange(sourceRange: range)
         start = range.upperBound
-      } else if let line = sortedMap.first(where: {start < $0.sourceRangeStart}){
+      } else if let line = sortedMap.first(where: { start < $0.sourceRangeStart }) {
         destinationRange = start..<line.sourceRangeStart
         start = destinationRange.upperBound
       } else {
@@ -161,7 +161,7 @@ struct Day05: AdventDay {
     let soilRanges = seedRanges.reduce([]) { acc, seedRange in
       acc + sourceToDestination(map: almanach.seedToSoil, sourceRange: seedRange)
     }
-    let fertilizerRanges = soilRanges.reduce([])  {acc, soilRange in
+    let fertilizerRanges = soilRanges.reduce([]) { acc, soilRange in
       acc + sourceToDestination(map: almanach.soilToFertilizer, sourceRange: soilRange)
     }
     let waterRanges = fertilizerRanges.reduce([]) { acc, fertilizerRange in
@@ -170,7 +170,7 @@ struct Day05: AdventDay {
     let lightRanges = waterRanges.reduce([]) { acc, waterRange in
       acc + sourceToDestination(map: almanach.waterToLight, sourceRange: waterRange)
     }
-    let temperatureRanges = lightRanges.reduce([]) {acc, lightRange in
+    let temperatureRanges = lightRanges.reduce([]) { acc, lightRange in
       acc + sourceToDestination(map: almanach.lightToTemperature, sourceRange: lightRange)
     }
     let humidityRanges = temperatureRanges.reduce([]) { acc, temperatureRange in
